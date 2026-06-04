@@ -1,0 +1,34 @@
+import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { getAdminContext } from "@/lib/admin";
+
+export async function POST(request, { params }) {
+  const supabase = createClient();
+  const { isAdmin, user } = await getAdminContext(supabase);
+
+  if (!isAdmin) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  const form = await request.formData();
+  const approvalStatus = form.get("approval_status") || "approved";
+
+  const { error } = await supabase
+    .from("dealerships")
+    .update({
+      plan_name: form.get("plan_name"),
+      subscription_status: form.get("subscription_status"),
+      approval_status: approvalStatus,
+      admin_notes: form.get("admin_notes"),
+      approved_at: approvalStatus === "approved" ? new Date().toISOString() : null,
+      approved_by: approvalStatus === "approved" ? user.id : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", params.dealerId);
+
+  if (error) {
+    console.error("Admin dealer update failed:", error);
+  }
+
+  return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+}

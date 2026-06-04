@@ -1,0 +1,7 @@
+import DashboardNav from "@/components/DashboardNav";
+import PageEditorClient from "@/components/PageEditorClient";
+import { getDealerContext } from "@/lib/getDealer";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+export default async function EditLivePage({params}){ const {supabase,dealer}=await getDealerContext(); if(!dealer)redirect("/onboarding"); const {data:page}=await supabase.from("customer_pages").select("*, customers(first_name), customer_page_vehicles(vehicles(make,model,year,image_urls))").eq("id",params.pageId).eq("dealership_id",dealer.id).single(); if(!page)redirect("/dashboard/live-pages"); const site=process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000"; const publicLink=`${site}/p/${dealer.slug}/${page.slug}`; return <main className="min-h-screen p-4 md:p-6"><div className="max-w-7xl mx-auto grid md:grid-cols-[250px_1fr] gap-5"><DashboardNav/><section className="space-y-5"><Link href="/dashboard/live-pages" className="btn-secondary w-fit"><ArrowLeft size={18} className="mr-2"/> Back to pages</Link><div className="dark-card p-8 md:p-10"><p className="text-acid font-black mb-4">Edit page</p><h1 className="text-5xl md:text-7xl font-black leading-[0.9] tracking-tight">Adjust before you resend.</h1><p className="text-white/60 mt-6 break-all">{publicLink}</p></div><PageEditorClient page={page}/></section></div></main> }

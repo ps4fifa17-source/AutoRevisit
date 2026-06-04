@@ -1,0 +1,5 @@
+import { HelpCircle } from "lucide-react";
+export default function QuestionsToAsk({ mode = "default", dark = false }) {
+  const questions = mode === "firstcar" ? ["What’s the insurance group?", "What are the running costs?", "Any service history?", "What warranty options are available?"] : mode === "family" ? ["Is there enough space for daily use?", "What warranty options are available?", "When is the MOT due?", "Can we check practicality in person?"] : ["Any service history?", "When is the MOT due?", "What warranty options are available?", "Can I arrange a viewing?"];
+  return <div className={dark ? "ar-dark-card p-5 mt-5" : "ar-card p-5 mt-5"}><h2 className={`font-black text-xl ${dark ? "text-white" : ""}`}>Questions worth asking</h2><div className="grid gap-3 mt-4">{questions.map((q)=><div key={q} className="flex gap-3"><HelpCircle size={17} style={{ color: "var(--dealer-primary)" }} /><p className={`text-sm ${dark ? "text-white/62" : "text-black/62"}`}>{q}</p></div>)}</div></div>;
+}
