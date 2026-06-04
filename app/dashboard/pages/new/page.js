@@ -52,6 +52,10 @@ export default function NewCustomerPage() {
   const [generatedMessage, setGeneratedMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [showFinance, setShowFinance] = useState(false);
+  const [showContext, setShowContext] = useState(false);
+  const [showStylePicker, setShowStylePicker] = useState(false);
+
   const [form, setForm] = useState({
     page_type: "revisit",
     customer_name: "",
@@ -108,7 +112,6 @@ export default function NewCustomerPage() {
 
     if (cleanVehicles.length) {
       setSelectedCar(cleanVehicles[0].id);
-      setForm((current) => ({ ...current, finance_monthly: cleanVehicles[0].monthly_price || "" }));
     }
 
     const { count } = await supabase
@@ -134,12 +137,24 @@ export default function NewCustomerPage() {
     designStyle: form.page_type === "enquiry" ? "clean_light" : form.design_style,
   });
 
+  const financePayload = showFinance
+    ? {
+        monthly: form.finance_monthly,
+        deposit: form.finance_deposit,
+        term: form.finance_term,
+        apr: form.finance_apr,
+      }
+    : { monthly: "", deposit: "", term: "", apr: "" };
+  const dealerContext = showContext ? form.dealer_notes : "";
+
   function update(key, value) {
     setForm((current) => ({ ...current, [key]: value }));
   }
 
   function updatePageType(value) {
     if (value === "enquiry") {
+      setShowFinance(false);
+      setShowStylePicker(false);
       setForm((current) => ({
         ...current,
         page_type: value,
@@ -151,6 +166,9 @@ export default function NewCustomerPage() {
     }
 
     if (value === "thank_you") {
+      setShowFinance(false);
+      setShowContext(false);
+      setShowStylePicker(false);
       setForm((current) => ({ ...current, page_type: value }));
       return;
     }
@@ -169,7 +187,15 @@ export default function NewCustomerPage() {
   function selectVehicle(value) {
     setSelectedCar(value);
     const vehicle = vehicles.find((car) => car.id === value);
-    if (vehicle?.monthly_price && !form.finance_monthly) update("finance_monthly", vehicle.monthly_price);
+    if (showFinance && vehicle?.monthly_price && !form.finance_monthly) update("finance_monthly", vehicle.monthly_price);
+  }
+
+  function toggleFinance(value) {
+    setShowFinance(value);
+    if (value && selectedVehicle?.monthly_price && !form.finance_monthly) update("finance_monthly", selectedVehicle.monthly_price);
+    if (!value) {
+      setForm((current) => ({ ...current, finance_monthly: "", finance_deposit: "", finance_term: "", finance_apr: "" }));
+    }
   }
 
   async function createThankYouPage() {
@@ -259,13 +285,8 @@ export default function NewCustomerPage() {
         style: form.page_type === "enquiry" ? "clean_light" : form.design_style,
         pageType: form.page_type,
         pageUrl: publicLink,
-        finance: {
-          monthly: form.finance_monthly,
-          deposit: form.finance_deposit,
-          term: form.finance_term,
-          apr: form.finance_apr,
-        },
-        dealerNotes: form.dealer_notes,
+        finance: financePayload,
+        dealerNotes: dealerContext,
       }),
     });
 
@@ -290,8 +311,8 @@ export default function NewCustomerPage() {
         customer_type: form.page_type === "enquiry" ? "Fresh enquiry" : form.who_for,
         notes:
           form.page_type === "enquiry"
-            ? `Enquiry follow up${form.dealer_notes ? ` | Notes: ${form.dealer_notes}` : ""}`
-            : `Who for: ${form.who_for} | Push: ${form.push_angle} | Style: ${form.design_style}${form.dealer_notes ? ` | Notes: ${form.dealer_notes}` : ""}`,
+            ? `Enquiry follow up${dealerContext ? ` | Context: ${dealerContext}` : ""}`
+            : `Who for: ${form.who_for} | Focus: ${form.push_angle} | Style: ${form.design_style}${dealerContext ? ` | Context: ${dealerContext}` : ""}`,
       })
       .select()
       .single();
@@ -325,11 +346,11 @@ export default function NewCustomerPage() {
         buying_for: form.page_type === "enquiry" ? "fresh_enquiry" : form.who_for,
         push_angle: form.page_type === "enquiry" ? "enquiry" : form.push_angle,
         design_style: form.page_type === "enquiry" ? "clean_light" : form.design_style,
-        finance_monthly: form.finance_monthly,
-        finance_deposit: form.finance_deposit,
-        finance_term: form.finance_term,
-        finance_apr: form.finance_apr,
-        dealer_notes: form.dealer_notes,
+        finance_monthly: financePayload.monthly,
+        finance_deposit: financePayload.deposit,
+        finance_term: financePayload.term,
+        finance_apr: financePayload.apr,
+        dealer_notes: dealerContext,
         whatsapp_message: whatsappMessage,
         status: "live",
         watermark_forced: plan.watermarkForced,
@@ -343,13 +364,8 @@ export default function NewCustomerPage() {
           push_angle: form.page_type === "enquiry" ? "enquiry" : form.push_angle,
           design_style: form.page_type === "enquiry" ? "clean_light" : form.design_style,
           page_type: form.page_type,
-          finance: {
-            monthly: form.finance_monthly,
-            deposit: form.finance_deposit,
-            term: form.finance_term,
-            apr: form.finance_apr,
-          },
-          dealer_notes: form.dealer_notes,
+          finance: financePayload,
+          dealer_notes: dealerContext,
         },
         ai_short_cards: micro.quickCards || micro.topReasons || [],
         ai_microcopy: { ...micro, greeting, subline },
@@ -429,9 +445,9 @@ export default function NewCustomerPage() {
         <section className="space-y-5">
           <div className="dark-card p-8 md:p-10">
             <p className="text-acid font-black mb-4">Create page</p>
-            <h1 className="text-5xl md:text-7xl font-black leading-[0.9] tracking-tight">What are you sending?</h1>
+            <h1 className="text-5xl md:text-7xl font-black leading-[0.9] tracking-tight">Create Customer Page</h1>
             <p className="text-white/60 text-lg mt-6 max-w-2xl">
-              Revisit pages use the full AI sales brain. Enquiry and thank-you pages stay simple.
+              Pick the customer, the vehicle and a simple focus. Extra details are optional.
             </p>
           </div>
 
@@ -463,7 +479,7 @@ export default function NewCustomerPage() {
                 </div>
               </Panel>
 
-              <Panel badge="Customer" title={form.page_type === "enquiry" ? "2. Fresh enquiry details" : form.page_type === "thank_you" ? "2. Handover details" : "2. Customer and vehicle"}>
+              <Panel badge="Customer" title={form.page_type === "enquiry" ? "2. Enquiry details" : form.page_type === "thank_you" ? "2. Handover details" : "2. Customer and vehicle"}>
                 <div className="grid md:grid-cols-2 gap-4 mt-6">
                   <input className="input" placeholder="Customer name" value={form.customer_name} onChange={(e) => update("customer_name", e.target.value)} />
                   <input className="input" placeholder="Phone optional" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
@@ -479,56 +495,92 @@ export default function NewCustomerPage() {
 
               {form.page_type === "revisit" && (
                 <>
-                  <Panel icon={UserRound} badge="Audience" title="3. Who is this vehicle for?">
-                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3 mt-6">
-                      {Object.values(WHO_FOR_OPTIONS).map((option) => (
-                        <Choice key={option.id} active={form.who_for === option.id} title={option.label} description={option.description} onClick={() => update("who_for", option.id)} />
-                      ))}
+                  <Panel icon={UserRound} badge="Customer fit" title="3. Who and what should this focus on?">
+                    <div className="grid md:grid-cols-2 gap-4 mt-6">
+                      <label className="block">
+                        <span className="text-sm font-black text-ink/60">Buying for</span>
+                        <select className="input mt-2" value={form.who_for} onChange={(e) => update("who_for", e.target.value)}>
+                          {Object.values(WHO_FOR_OPTIONS).map((option) => (
+                            <option key={option.id} value={option.id}>{option.label}</option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="block">
+                        <span className="text-sm font-black text-ink/60">Page focus</span>
+                        <select className="input mt-2" value={form.push_angle} onChange={(e) => updatePush(e.target.value)}>
+                          {Object.values(PUSH_OPTIONS).map((option) => (
+                            <option key={option.id} value={option.id}>{option.label}</option>
+                          ))}
+                        </select>
+                      </label>
                     </div>
-                  </Panel>
-
-                  <Panel icon={Target} badge="Focus" title="4. What should this page focus on?">
-                    <div className="grid md:grid-cols-2 gap-3 mt-6">
-                      {Object.values(PUSH_OPTIONS).map((option) => (
-                        <Choice
-                          key={option.id}
-                          active={form.push_angle === option.id}
-                          title={option.label}
-                          description={option.description}
-                          onClick={() => updatePush(option.id)}
-                        />
-                      ))}
-                    </div>
-                  </Panel>
-
-                  <FinancePanel form={form} update={update} title="5. Finance details" />
-
-                  <Panel icon={Palette} badge="Style" title="6. Choose the look">
-                    <p className="text-ink/55 mt-3">
-                      Recommended: <span className="font-black text-ink">{DESIGN_STYLES[recommendedStyle]?.label}</span>. You can still choose another look.
+                    <p className="text-ink/55 mt-4 text-sm">
+                      Default is themselves + reassurance. Change only if it helps the page sell the vehicle better.
                     </p>
-                    <div className="mt-6">
-                      <PageStylePreview
-                        value={form.design_style}
-                        onChange={(value) => update("design_style", value)}
-                        recommendedStyle={recommendedStyle}
-                        dealerName={dealer?.name || "Dealer"}
-                        vehicleTitle={selectedVehicleTitle}
-                      />
-                    </div>
                   </Panel>
 
-                  <NotesPanel form={form} update={update} title={`7. ${DEALER_NOTES_TITLE}`} placeholder={DEALER_NOTES_PLACEHOLDER_REVISIT} />
+                  <TogglePanel
+                    icon={WalletCards}
+                    badge="Finance"
+                    title="4. Add finance details?"
+                    description="Only add confirmed figures. Leave this off if you do not want finance shown."
+                    enabled={showFinance}
+                    onToggle={toggleFinance}
+                  >
+                    <FinanceFields form={form} update={update} />
+                  </TogglePanel>
+
+                  <TogglePanel
+                    icon={StickyNote}
+                    badge="AI context"
+                    title={`5. Add ${DEALER_NOTES_TITLE.toLowerCase()}?`}
+                    description="Use this when you know something useful from the conversation."
+                    enabled={showContext}
+                    onToggle={setShowContext}
+                  >
+                    <NotesBox form={form} update={update} placeholder={DEALER_NOTES_PLACEHOLDER_REVISIT} />
+                  </TogglePanel>
+
+                  <Panel icon={Palette} badge="Style" title="6. Page style">
+                    <div className="rounded-[26px] border border-ink/10 bg-white/75 p-5 mt-6">
+                      <p className="text-sm text-ink/45 font-black uppercase tracking-[0.12em]">Recommended</p>
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-2">
+                        <div>
+                          <p className="text-2xl font-black">{DESIGN_STYLES[form.design_style]?.label || "Clean Light"}</p>
+                          <p className="text-ink/55 mt-1">{DESIGN_STYLES[form.design_style]?.description}</p>
+                        </div>
+                        <button type="button" onClick={() => setShowStylePicker((value) => !value)} className="btn-secondary">
+                          {showStylePicker ? "Hide styles" : "Change style"}
+                        </button>
+                      </div>
+                    </div>
+                    {showStylePicker && (
+                      <div className="mt-5">
+                        <PageStylePreview
+                          value={form.design_style}
+                          onChange={(value) => update("design_style", value)}
+                          recommendedStyle={recommendedStyle}
+                          dealerName={dealer?.name || "Dealer"}
+                          vehicleTitle={selectedVehicleTitle}
+                        />
+                      </div>
+                    )}
+                  </Panel>
                 </>
               )}
 
               {form.page_type === "enquiry" && (
-                <NotesPanel
-                  form={form}
-                  update={update}
-                  title={`3. ${DEALER_NOTES_TITLE}`}
-                  placeholder={DEALER_NOTES_PLACEHOLDER_ENQUIRY}
-                />
+                <TogglePanel
+                  icon={StickyNote}
+                  badge="AI context"
+                  title={`3. Add ${DEALER_NOTES_TITLE.toLowerCase()}?`}
+                  description="Optional. Use it if the customer asked something specific in the enquiry."
+                  enabled={showContext}
+                  onToggle={setShowContext}
+                >
+                  <NotesBox form={form} update={update} placeholder={DEALER_NOTES_PLACEHOLDER_ENQUIRY} />
+                </TogglePanel>
               )}
 
               {form.page_type === "thank_you" && (
@@ -546,19 +598,19 @@ export default function NewCustomerPage() {
                 <h2 className="text-3xl font-black">Ready?</h2>
                 <p className="text-ink/55 mt-2">
                   {form.page_type === "revisit"
-                    ? "This will generate a full AI customer revisit page."
+                    ? "This will generate a personalised AI customer revisit page."
                     : form.page_type === "enquiry"
                     ? "This will create a simple enquiry follow-up page."
                     : "This will create a branded thank-you page."}
                 </p>
-                <button onClick={createPage} disabled={loading || (form.page_type !== "thank_you" && !selectedCar) || (limitReached && form.page_type !== "thank_you")} className="btn-acid w-full mt-6">
+                <button onClick={createPage} disabled={loading || ((form.page_type !== "thank_you") && !selectedCar) || (limitReached && form.page_type !== "thank_you")} className="btn-acid w-full mt-6">
                   {loading ? "Creating..." : form.page_type === "thank_you" ? "Create thank-you page" : "Create page"}
                   <ArrowRight size={18} className="ml-2" />
                 </button>
               </section>
             </section>
 
-            <JourneyBuilderPreview form={form} selectedVehicle={selectedVehicleTitle} dealerName={dealer?.name} />
+            <JourneyBuilderPreview form={{ ...form, finance_monthly: showFinance ? form.finance_monthly : "", dealer_notes: showContext ? form.dealer_notes : "" }} selectedVehicle={selectedVehicleTitle} dealerName={dealer?.name} />
           </div>
         </section>
       </div>
@@ -566,31 +618,48 @@ export default function NewCustomerPage() {
   );
 }
 
-function FinancePanel({ form, update, title }) {
+function FinanceFields({ form, update }) {
   return (
-    <Panel icon={WalletCards} badge="Finance" title={title}>
-      <p className="text-ink/55 mt-3">Optional figures. Leave blank if you do not have them.</p>
-      <div className="grid md:grid-cols-4 gap-4 mt-6">
-        <input className="input" placeholder="Monthly e.g. £219" value={form.finance_monthly} onChange={(e) => update("finance_monthly", e.target.value)} />
-        <input className="input" placeholder="Deposit" value={form.finance_deposit} onChange={(e) => update("finance_deposit", e.target.value)} />
-        <input className="input" placeholder="Term" value={form.finance_term} onChange={(e) => update("finance_term", e.target.value)} />
-        <input className="input" placeholder="APR" value={form.finance_apr} onChange={(e) => update("finance_apr", e.target.value)} />
-      </div>
-    </Panel>
+    <div className="grid md:grid-cols-4 gap-4 mt-6">
+      <input className="input" placeholder="Monthly e.g. £219" value={form.finance_monthly} onChange={(e) => update("finance_monthly", e.target.value)} />
+      <input className="input" placeholder="Deposit" value={form.finance_deposit} onChange={(e) => update("finance_deposit", e.target.value)} />
+      <input className="input" placeholder="Term" value={form.finance_term} onChange={(e) => update("finance_term", e.target.value)} />
+      <input className="input" placeholder="APR" value={form.finance_apr} onChange={(e) => update("finance_apr", e.target.value)} />
+    </div>
   );
 }
 
-function NotesPanel({ form, update, title, placeholder }) {
+function NotesBox({ form, update, placeholder }) {
   return (
-    <Panel icon={StickyNote} badge="Your words" title={title}>
-      <p className="text-ink/55 mt-3">Tell AutoRevisit what mattered in the conversation. This shapes the page around the customer and vehicle.</p>
+    <>
+      <p className="text-ink/55 mt-4">The more context you give, the more personal the page becomes.</p>
       <textarea
-        className="input min-h-[140px] mt-6"
+        className="input min-h-[140px] mt-4"
         placeholder={placeholder}
         value={form.dealer_notes}
         onChange={(e) => update("dealer_notes", e.target.value)}
       />
-    </Panel>
+    </>
+  );
+}
+
+function TogglePanel({ badge, title, description, children, icon: Icon, enabled, onToggle }) {
+  return (
+    <section className="card p-7">
+      {Icon && <Icon className="mb-3" />}
+      <p className="badge mb-4">{badge}</p>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+        <div>
+          <h2 className="text-3xl font-black">{title}</h2>
+          <p className="text-ink/55 mt-2">{description}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 shrink-0">
+          <button type="button" onClick={() => onToggle(false)} className={`rounded-2xl px-5 py-3 font-black border ${!enabled ? "bg-ink text-acid border-ink" : "bg-white/70 border-ink/10"}`}>No</button>
+          <button type="button" onClick={() => onToggle(true)} className={`rounded-2xl px-5 py-3 font-black border ${enabled ? "bg-ink text-acid border-ink" : "bg-white/70 border-ink/10"}`}>Yes</button>
+        </div>
+      </div>
+      {enabled && children}
+    </section>
   );
 }
 

@@ -43,10 +43,7 @@ function normaliseCopy(copy, fallback) {
     ownershipText: copy.ownershipText || fallback.ownershipText,
     reassuranceTitle: copy.reassuranceTitle || fallback.reassuranceTitle,
     reassuranceText: copy.reassuranceText || fallback.reassuranceText,
-    questions:
-      Array.isArray(copy.questions) && copy.questions.length
-        ? copy.questions.slice(0, 3).map((q) => String(q).slice(0, 80))
-        : fallback.questions,
+    questions: [],
     primaryCta: copy.primaryCta || fallback.primaryCta,
     secondaryCta: copy.secondaryCta || fallback.secondaryCta,
     whatsappMessage: copy.whatsappMessage || fallback.whatsappMessage,
@@ -131,7 +128,13 @@ export async function POST(request) {
     });
 
     const raw = completion.choices?.[0]?.message?.content || "";
-    const parsed = safeJsonParse(raw);
+    let parsed;
+    try {
+      parsed = safeJsonParse(raw);
+    } catch (error) {
+      console.error("AI JSON parse failed, using fallback:", error);
+      return NextResponse.json({ copy: fallback, source: "fallback_invalid_ai_json" });
+    }
     const copy = normaliseCopy(parsed, fallback);
 
     return NextResponse.json({ copy, source: "openai" });

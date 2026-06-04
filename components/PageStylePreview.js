@@ -5,7 +5,7 @@ import { CheckCircle, Sparkles } from "lucide-react";
 
 export default function PageStylePreview({ value, onChange, recommendedStyle, dealerName = "Dealer", vehicleTitle = "Vehicle" }) {
   return (
-    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3">
       {Object.values(DESIGN_STYLES).map((style) => {
         const active = value === style.id;
         const recommended = recommendedStyle === style.id;
@@ -15,14 +15,14 @@ export default function PageStylePreview({ value, onChange, recommendedStyle, de
             key={style.id}
             type="button"
             onClick={() => onChange(style.id)}
-            className={`text-left rounded-[30px] border bg-white overflow-hidden transition ${
+            className={`text-left rounded-[24px] border bg-white overflow-hidden transition ${
               active ? "border-ink ring-4 ring-acid/40" : "border-ink/10 hover:border-ink/25"
             }`}
           >
             <MiniPreview styleId={style.id} dealerName={dealerName} vehicleTitle={vehicleTitle} />
             <div className="p-4">
               <div className="flex items-center justify-between gap-2">
-                <p className="font-black text-xl">{style.label}</p>
+                <p className="font-black text-lg">{style.label}</p>
                 {active ? <CheckCircle size={18} /> : recommended ? <Sparkles size={18} /> : null}
               </div>
               <p className="text-sm text-ink/50 mt-1">{style.description}</p>
@@ -38,81 +38,66 @@ export default function PageStylePreview({ value, onChange, recommendedStyle, de
 function MiniPreview({ styleId, dealerName, vehicleTitle }) {
   if (styleId === "finance_focus") {
     return (
-      <div className="h-72 bg-white text-ink p-5">
-        <p className="text-xs font-black" style={{ color: "#111315" }}>A simple monthly view</p>
-        <h3 className="text-6xl font-black mt-8">£219</h3>
-        <p className="font-black">per month</p>
-        <div className="grid grid-cols-3 gap-2 mt-6">
-          <div className="h-12 rounded-2xl bg-black/8" />
-          <div className="h-12 rounded-2xl bg-black/8" />
-          <div className="h-12 rounded-2xl bg-black/8" />
-        </div>
+      <div className="h-36 bg-white text-ink p-4">
+        <p className="text-xs font-black text-black/45">Monthly view</p>
+        <h3 className="text-5xl font-black mt-4 tracking-[-0.06em]">£219</h3>
+        <p className="font-black text-sm">per month</p>
       </div>
     );
   }
 
   if (styleId === "warm_family") {
     return (
-      <div className="h-72 bg-[#fff7e8] text-ink p-5">
-        <p className="font-black">Hello Jack,</p>
-        <h3 className="text-3xl font-black mt-4 leading-tight">Built for everyday family life.</h3>
-        <div className="rounded-2xl bg-white p-3 mt-6 font-black text-sm">Comfort</div>
-        <div className="rounded-2xl bg-white p-3 mt-2 font-black text-sm">Practicality</div>
+      <div className="h-36 bg-[#fff7e8] text-ink p-4">
+        <p className="font-black text-sm">Hello Jack,</p>
+        <h3 className="text-2xl font-black mt-3 leading-tight">Made for everyday use.</h3>
+        <div className="grid grid-cols-2 gap-2 mt-4"><div className="rounded-xl bg-white p-2 text-xs font-black">Comfort</div><div className="rounded-xl bg-white p-2 text-xs font-black">Space</div></div>
       </div>
     );
   }
 
   if (styleId === "safe_light") {
     return (
-      <div className="h-72 bg-[#f8f9ff] text-ink p-5">
-        <p className="font-black">First car fit</p>
-        <h3 className="text-3xl font-black mt-5 leading-tight">Why this could suit you.</h3>
-        <div className="grid gap-2 mt-5">
-          <div className="h-10 rounded-2xl bg-white" />
-          <div className="h-10 rounded-2xl bg-white" />
-          <div className="h-10 rounded-2xl bg-white" />
-        </div>
+      <div className="h-36 bg-[#f8f9ff] text-ink p-4">
+        <p className="font-black text-sm">Hello Jack,</p>
+        <h3 className="text-2xl font-black mt-4 leading-tight">Confidence from the start.</h3>
+        <div className="h-9 rounded-2xl bg-white mt-4" />
       </div>
     );
   }
 
   if (styleId === "dark_premium") {
     return (
-      <div className="h-72 bg-[#07080b] text-white p-5">
+      <div className="h-36 bg-[#07080b] text-white p-4">
         <p className="text-xs font-black text-white/45">{dealerName}</p>
-        <p className="text-xs text-acid mt-8 font-black">Hello Jack,</p>
-        <h3 className="text-4xl font-black italic leading-none mt-2">This one<br />stands out</h3>
-        <div className="h-24 rounded-3xl bg-white/10 mt-5" />
+        <h3 className="text-3xl font-black italic leading-none mt-6">FEEL<br />THE DRIVE</h3>
       </div>
     );
   }
 
   if (styleId === "executive_minimal") {
     return (
-      <div className="h-72 bg-[#f4f4f1] text-ink p-5">
-        <p className="text-xs tracking-[0.18em] uppercase font-black">Clear overview</p>
-        <h3 className="text-4xl font-black mt-10 leading-none">{vehicleTitle}</h3>
-        <div className="h-1 w-14 bg-black mt-5" />
-        <p className="text-sm mt-8 text-black/45">Prepared overview</p>
+      <div className="h-36 bg-[#f4f4f1] text-ink p-4">
+        <p className="text-xs tracking-[0.18em] uppercase font-black">Summary</p>
+        <h3 className="text-2xl font-black mt-8 leading-tight">{vehicleTitle}</h3>
+        <div className="h-1 w-12 bg-black mt-3" />
       </div>
     );
   }
 
   if (styleId === "luxury_dark") {
     return (
-      <div className="h-72 bg-[#070707] text-[#f5eddf] p-5">
-        <p className="text-xs tracking-[0.22em] text-[#f5eddf]/45">PREPARED FOR YOU</p>
-        <h3 className="text-3xl font-black mt-12 leading-none">{vehicleTitle}</h3>
-        <div className="h-24 rounded-3xl bg-white/10 mt-6" />
+      <div className="h-36 bg-[#070707] text-[#f5eddf] p-4">
+        <p className="text-xs tracking-[0.22em] text-[#f5eddf]/45">PRIVATE</p>
+        <h3 className="text-2xl font-black mt-8 leading-tight">{vehicleTitle}</h3>
       </div>
     );
   }
 
   return (
-    <div className="h-72 bg-[#f7f7f4] text-ink p-5">
-      <p className="font-black">{dealerName}</p>
-      <h3 className="text-3xl font-black mt-10 leading-tight">Hello Jack, your {vehicleTitle} page is ready.</h3>
-      <div className="h-24 rounded-3xl bg-black/8 mt-5" />
+    <div className="h-36 bg-[#f7f7f4] text-ink p-4">
+      <p className="font-black text-sm">{dealerName}</p>
+      <h3 className="text-2xl font-black mt-6 leading-tight">Hello Jack, your page is ready.</h3>
     </div>
   );
 }

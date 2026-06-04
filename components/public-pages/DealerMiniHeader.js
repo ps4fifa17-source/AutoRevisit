@@ -7,10 +7,7 @@ export default function DealerMiniHeader({ dealer, dark = false, minimal = false
           <img src={dealer.logo_url} alt={name} className="ar-logo-img" />
         ) : (
           <>
-            <div
-              className="h-9 w-9 rounded-full flex items-center justify-center text-white font-black"
-              style={{ background: "var(--dealer-primary)" }}
-            >
+            <div className="h-9 w-9 rounded-full flex items-center justify-center text-white font-black" style={{ background: "var(--dealer-primary)" }}>
               {name.slice(0, 1)}
             </div>
             <p className={`font-black leading-none truncate ${dark ? "text-white" : ""}`}>{name}</p>

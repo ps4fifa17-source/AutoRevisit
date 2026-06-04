@@ -80,7 +80,12 @@ export default async function PublicCustomerPage({ params }) {
   const mode = resolvePublicMode(page);
 
   const plan = getPlan(dealer.plan_name || "starter");
-  const showWatermark = plan.watermarkForced || page.watermark_forced || !dealer.remove_branding;
+  const planKey = String(dealer.plan_name || dealer.plan || "").toLowerCase();
+
+const showWatermark =
+  planKey !== "premium" &&
+  planKey !== "enterprise" &&
+  !dealer.remove_branding;
 
   const publicUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/p/${params.dealerSlug}/${params.pageSlug}`;
   const vehicleFacts = cleanVehicleFacts(vehicle);
