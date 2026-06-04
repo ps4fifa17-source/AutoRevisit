@@ -11,7 +11,7 @@ export default function PerformancePage({ dealer, page, vehicle, copy, whatsappU
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="Drive focused" dark />
+      <DealerMiniHeader dealer={dealer} dark />
       <div className="px-5">
         <AnimatedSection><div className="relative rounded-[34px] overflow-hidden p-6 min-h-[255px]" style={{ background: "linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025))", border: "1px solid rgba(255,255,255,.11)" }}><div className="absolute -right-12 top-10 h-44 w-44 rounded-full blur-3xl opacity-60" style={{ background: "var(--dealer-glow)" }} /><p className="font-black tracking-[0.18em] text-xs" style={{ color: "var(--dealer-primary)" }}>BUILT TO FEEL SPECIAL</p><h1 className="text-[48px] leading-[0.9] font-black italic tracking-[-0.06em] mt-5">{copy.heroTitle || copy.headline}</h1><p className="text-white/62 mt-4">{copy.heroSubtitle || copy.intro}</p></div></AnimatedSection>
         <AnimatedSection delay={100}><VehicleHeroImage vehicle={vehicle} treatment="cinematic" className="mt-6 shadow-2xl" /></AnimatedSection>

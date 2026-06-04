@@ -13,7 +13,7 @@ export default function SimplePage({ dealer, page, vehicle, copy, whatsappUrl, s
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label={`Prepared for ${copy.customerFirst || "you"}`} />
+      <DealerMiniHeader dealer={dealer} />
       <div className="px-5">
         <AnimatedSection>
           <p className="font-black text-lg" style={{ color: "var(--dealer-primary)" }}>{copy.greeting || copy.hello}</p>

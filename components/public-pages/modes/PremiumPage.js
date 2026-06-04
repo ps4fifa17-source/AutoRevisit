@@ -11,7 +11,7 @@ export default function PremiumPage({ dealer, page, vehicle, copy, whatsappUrl, 
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="Private page" dark />
+      <DealerMiniHeader dealer={dealer} dark />
 
       <div className="px-5">
         <AnimatedSection delay={0}>

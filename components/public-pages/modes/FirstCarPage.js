@@ -5,7 +5,7 @@ import VehicleHeroImage from "../VehicleHeroImage";
 import VerifiedSpecGrid from "../VerifiedSpecGrid";
 import DealerTrustFooter from "../DealerTrustFooter";
 import TrackActionLink from "@/components/TrackActionLink";
-import { ShieldCheck, CarFront, ParkingCircle, Gauge, HelpCircle } from "lucide-react";
+import { ShieldCheck, CarFront, ParkingCircle, Gauge, ArrowRightCircle } from "lucide-react";
 
 function vehicleTitle(vehicle) {
   return [vehicle?.year, vehicle?.make, vehicle?.model].filter(Boolean).join(" ") || "this car";
@@ -17,7 +17,7 @@ export default function FirstCarPage({ dealer, page, vehicle, copy, whatsappUrl,
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="First car fit" />
+      <DealerMiniHeader dealer={dealer} />
       <div className="px-5">
         <AnimatedSection>
           <p className="font-black text-lg" style={{ color: "var(--dealer-primary)" }}>{copy.greeting || copy.hello}</p>
@@ -39,7 +39,7 @@ export default function FirstCarPage({ dealer, page, vehicle, copy, whatsappUrl,
 
         <div className="grid gap-3 mt-5">
           {reasons.slice(0, 4).map((item, index) => {
-            const icons = [ShieldCheck, ParkingCircle, Gauge, HelpCircle];
+            const icons = [ShieldCheck, ParkingCircle, Gauge, ArrowRightCircle];
             const Icon = icons[index] || ShieldCheck;
             return (
               <AnimatedSection key={`${item.title}-${index}`} delay={230 + index * 70}>
@@ -59,10 +59,14 @@ export default function FirstCarPage({ dealer, page, vehicle, copy, whatsappUrl,
         <AnimatedSection delay={620}><VerifiedSpecGrid vehicle={vehicle} max={4} /></AnimatedSection>
 
         <AnimatedSection delay={690}>
-          <div className="ar-card p-5 mt-6">
-            <h2 className="font-black text-xl">{copy.reassuranceTitle || "Helpful things to confirm"}</h2>
-            <p className="text-sm mt-2" style={{ color: "var(--dealer-muted)" }}>{copy.reassuranceText || "Insurance, running costs, MOT, service history and warranty options are worth checking before committing."}</p>
-            {Array.isArray(copy.questions) && copy.questions.length > 0 && <div className="grid gap-3 mt-4">{copy.questions.slice(0, 3).map((question) => <div key={question} className="flex gap-3"><HelpCircle size={17} style={{ color: "var(--dealer-primary)" }} /><p className="text-sm">{question}</p></div>)}</div>}
+          <div className="ar-card p-5 mt-6 flex gap-4 items-start">
+            <div className="h-11 w-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "var(--dealer-primary-soft)", color: "var(--dealer-primary)" }}>
+              <ArrowRightCircle size={20} />
+            </div>
+            <div>
+              <h2 className="font-black text-xl">{copy.reassuranceTitle || "Worth another look"}</h2>
+              <p className="text-sm mt-2" style={{ color: "var(--dealer-muted)" }}>{copy.reassuranceText || "Everything important is kept together so it is easier to decide the next step."}</p>
+            </div>
           </div>
         </AnimatedSection>
 

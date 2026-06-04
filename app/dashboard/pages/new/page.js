@@ -487,14 +487,14 @@ export default function NewCustomerPage() {
                     </div>
                   </Panel>
 
-                  <Panel icon={Target} badge="Push" title="4. What is stopping them buying?">
+                  <Panel icon={Target} badge="Focus" title="4. What should this page focus on?">
                     <div className="grid md:grid-cols-2 gap-3 mt-6">
                       {Object.values(PUSH_OPTIONS).map((option) => (
                         <Choice
                           key={option.id}
                           active={form.push_angle === option.id}
                           title={option.label}
-                          description={`${option.description} Recommended: ${DESIGN_STYLES[option.recommendedStyle]?.label}`}
+                          description={option.description}
                           onClick={() => updatePush(option.id)}
                         />
                       ))}
@@ -505,7 +505,7 @@ export default function NewCustomerPage() {
 
                   <Panel icon={Palette} badge="Style" title="6. Choose the look">
                     <p className="text-ink/55 mt-3">
-                      Recommended: <span className="font-black text-ink">{DESIGN_STYLES[recommendedStyle]?.label}</span>. You can override it.
+                      Recommended: <span className="font-black text-ink">{DESIGN_STYLES[recommendedStyle]?.label}</span>. You can still choose another look.
                     </p>
                     <div className="mt-6">
                       <PageStylePreview
@@ -523,15 +523,12 @@ export default function NewCustomerPage() {
               )}
 
               {form.page_type === "enquiry" && (
-                <>
-                  <FinancePanel form={form} update={update} title="3. Finance details if already known" />
-                  <NotesPanel
-                    form={form}
-                    update={update}
-                    title={`4. ${DEALER_NOTES_TITLE}`}
-                    placeholder={DEALER_NOTES_PLACEHOLDER_ENQUIRY}
-                  />
-                </>
+                <NotesPanel
+                  form={form}
+                  update={update}
+                  title={`3. ${DEALER_NOTES_TITLE}`}
+                  placeholder={DEALER_NOTES_PLACEHOLDER_ENQUIRY}
+                />
               )}
 
               {form.page_type === "thank_you" && (
@@ -554,7 +551,7 @@ export default function NewCustomerPage() {
                     ? "This will create a simple enquiry follow-up page."
                     : "This will create a branded thank-you page."}
                 </p>
-                <button onClick={createPage} disabled={loading || !selectedCar || (limitReached && form.page_type !== "thank_you")} className="btn-acid w-full mt-6">
+                <button onClick={createPage} disabled={loading || (form.page_type !== "thank_you" && !selectedCar) || (limitReached && form.page_type !== "thank_you")} className="btn-acid w-full mt-6">
                   {loading ? "Creating..." : form.page_type === "thank_you" ? "Create thank-you page" : "Create page"}
                   <ArrowRight size={18} className="ml-2" />
                 </button>
@@ -572,7 +569,7 @@ export default function NewCustomerPage() {
 function FinancePanel({ form, update, title }) {
   return (
     <Panel icon={WalletCards} badge="Finance" title={title}>
-      <p className="text-ink/55 mt-3">Only add figures you actually have. If blank, the page will not invent finance.</p>
+      <p className="text-ink/55 mt-3">Optional figures. Leave blank if you do not have them.</p>
       <div className="grid md:grid-cols-4 gap-4 mt-6">
         <input className="input" placeholder="Monthly e.g. £219" value={form.finance_monthly} onChange={(e) => update("finance_monthly", e.target.value)} />
         <input className="input" placeholder="Deposit" value={form.finance_deposit} onChange={(e) => update("finance_deposit", e.target.value)} />
@@ -586,7 +583,7 @@ function FinancePanel({ form, update, title }) {
 function NotesPanel({ form, update, title, placeholder }) {
   return (
     <Panel icon={StickyNote} badge="Your words" title={title}>
-      <p className="text-ink/55 mt-3">The more context you give, the more the AI will shape the page around this customer.</p>
+      <p className="text-ink/55 mt-3">Tell AutoRevisit what mattered in the conversation. This shapes the page around the customer and vehicle.</p>
       <textarea
         className="input min-h-[140px] mt-6"
         placeholder={placeholder}

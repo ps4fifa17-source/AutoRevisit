@@ -15,7 +15,7 @@ export default function FinancePage({ dealer, page, vehicle, copy, whatsappUrl, 
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="Finance focus" />
+      <DealerMiniHeader dealer={dealer} />
       <div className="px-5">
         <AnimatedSection>
           <p className="font-black text-lg" style={{ color: "var(--dealer-primary)" }}>{copy.greeting || copy.hello}</p>

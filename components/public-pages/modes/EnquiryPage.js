@@ -14,7 +14,7 @@ export default function EnquiryPage({ dealer, page, vehicle, copy, whatsappUrl, 
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="Enquiry follow up" />
+      <DealerMiniHeader dealer={dealer} />
 
       <div className="px-5">
         <AnimatedSection>

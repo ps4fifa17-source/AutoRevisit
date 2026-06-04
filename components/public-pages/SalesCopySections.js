@@ -1,5 +1,5 @@
 import AnimatedSection from "./AnimatedSection";
-import { CheckCircle2, HelpCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, Sparkles, ArrowRightCircle } from "lucide-react";
 
 function short(text = "", max = 145) {
   const value = String(text || "");
@@ -73,24 +73,28 @@ export function OwnershipSection({ copy, dark = false, delay = 550 }) {
 }
 
 export function ObjectionSection({ copy, dark = false, delay = 650 }) {
-  if (!copy?.reassuranceTitle && !copy?.reassuranceText && !copy?.questions?.length) return null;
+  if (!copy?.reassuranceTitle && !copy?.reassuranceText && !copy?.primaryCta) return null;
+
+  const rawTitle = String(copy?.reassuranceTitle || "").trim();
+  const buyerGuideWords = /question|ask|check|confirm|unsure|before|worth asking|helpful/i;
+  const title = rawTitle && !buyerGuideWords.test(rawTitle) ? rawTitle : "Worth another look";
+  const text = copy?.reassuranceText || "Everything important is in one place, and the dealership can help with the next step when you are ready.";
 
   return (
     <AnimatedSection delay={delay}>
       <div className={dark ? "ar-dark-card p-5 mt-6" : "ar-card p-5 mt-6"}>
-        <h2 className={`font-black text-xl ${dark ? "text-white" : ""}`}>{short(copy.reassuranceTitle || "Still unsure?", 60)}</h2>
-        {copy.reassuranceText && <p className={`text-sm mt-2 ${dark ? "text-white/58" : "text-black/58"}`}>{short(copy.reassuranceText, 130)}</p>}
-
-        {!!copy.questions?.length && (
-          <div className="grid gap-3 mt-4">
-            {copy.questions.slice(0, 3).map((question) => (
-              <div key={question} className="flex gap-3">
-                <HelpCircle size={17} style={{ color: "var(--dealer-primary)" }} />
-                <p className={`text-sm ${dark ? "text-white/70" : "text-black/70"}`}>{short(question, 80)}</p>
-              </div>
-            ))}
+        <div className="flex gap-4 items-start">
+          <div
+            className="h-11 w-11 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: "var(--dealer-primary-soft)", color: "var(--dealer-primary)" }}
+          >
+            <ArrowRightCircle size={20} />
           </div>
-        )}
+          <div>
+            <h2 className={`font-black text-xl ${dark ? "text-white" : ""}`}>{short(title, 60)}</h2>
+            <p className={`text-sm mt-2 ${dark ? "text-white/58" : "text-black/58"}`}>{short(text, 130)}</p>
+          </div>
+        </div>
       </div>
     </AnimatedSection>
   );

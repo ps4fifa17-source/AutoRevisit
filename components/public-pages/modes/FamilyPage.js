@@ -12,7 +12,7 @@ export default function FamilyPage({ dealer, page, vehicle, copy, whatsappUrl, s
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="Family fit" />
+      <DealerMiniHeader dealer={dealer} />
       <div className="px-5">
         <AnimatedSection><p className="font-black text-lg" style={{ color: "var(--dealer-primary)" }}>{copy.greeting || copy.hello}</p><h1 className="text-[34px] leading-[1.06] font-black tracking-[-0.04em] mt-2">{copy.heroTitle || copy.headline}</h1><p className="text-sm mt-4" style={{ color: "var(--dealer-muted)" }}>{copy.heroSubtitle || copy.intro}</p></AnimatedSection>
         <AnimatedSection delay={90}><div className="ar-soft-card p-5 mt-6"><Users style={{ color: "var(--dealer-primary)" }} /><h2 className="text-xl font-black mt-4">Built around real family life</h2><p className="text-sm mt-2" style={{ color: "var(--dealer-muted)" }}>{copy.whyThisVehicleText || "Space, comfort and practicality matter most when the car needs to work every day."}</p></div></AnimatedSection>

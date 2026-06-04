@@ -11,7 +11,7 @@ export default function ExecutivePage({ dealer, page, vehicle, copy, whatsappUrl
   return (
     <>
       <TrackView pageId={page.id} />
-      <DealerMiniHeader dealer={dealer} label="Prepared summary" minimal />
+      <DealerMiniHeader dealer={dealer} minimal />
       <div className="px-5">
         <AnimatedSection><div className="bg-white border border-black/8 rounded-[18px] p-6 shadow-xl"><p className="text-xs uppercase tracking-[0.14em] font-black" style={{ color: "var(--dealer-primary)" }}>Executive summary</p><p className="text-black/60 mt-5">{copy.greeting || copy.hello}</p><h1 className="text-[34px] leading-[1.05] font-black tracking-[-0.04em] mt-3">{copy.heroTitle || copy.headline}</h1><p className="text-sm mt-4 text-black/58">{copy.heroSubtitle || copy.intro}</p></div></AnimatedSection>
         <AnimatedSection delay={110}><VehicleHeroImage vehicle={vehicle} treatment="light" className="mt-6 shadow-xl" /></AnimatedSection>

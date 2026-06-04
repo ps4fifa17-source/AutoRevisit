@@ -39,7 +39,7 @@ function MiniPreview({ styleId, dealerName, vehicleTitle }) {
   if (styleId === "finance_focus") {
     return (
       <div className="h-72 bg-white text-ink p-5">
-        <p className="text-xs font-black" style={{ color: "#111315" }}>FINANCE FIRST</p>
+        <p className="text-xs font-black" style={{ color: "#111315" }}>A simple monthly view</p>
         <h3 className="text-6xl font-black mt-8">£219</h3>
         <p className="font-black">per month</p>
         <div className="grid grid-cols-3 gap-2 mt-6">
@@ -66,7 +66,7 @@ function MiniPreview({ styleId, dealerName, vehicleTitle }) {
     return (
       <div className="h-72 bg-[#f8f9ff] text-ink p-5">
         <p className="font-black">First car fit</p>
-        <h3 className="text-3xl font-black mt-5 leading-tight">Confidence from the start.</h3>
+        <h3 className="text-3xl font-black mt-5 leading-tight">Why this could suit you.</h3>
         <div className="grid gap-2 mt-5">
           <div className="h-10 rounded-2xl bg-white" />
           <div className="h-10 rounded-2xl bg-white" />
@@ -80,8 +80,8 @@ function MiniPreview({ styleId, dealerName, vehicleTitle }) {
     return (
       <div className="h-72 bg-[#07080b] text-white p-5">
         <p className="text-xs font-black text-white/45">{dealerName}</p>
-        <p className="text-xs text-acid mt-8 font-black">BUILT TO THRILL</p>
-        <h3 className="text-4xl font-black italic leading-none mt-2">FEEL<br />THE DRIVE</h3>
+        <p className="text-xs text-acid mt-8 font-black">Hello Jack,</p>
+        <h3 className="text-4xl font-black italic leading-none mt-2">This one<br />stands out</h3>
         <div className="h-24 rounded-3xl bg-white/10 mt-5" />
       </div>
     );
@@ -90,7 +90,7 @@ function MiniPreview({ styleId, dealerName, vehicleTitle }) {
   if (styleId === "executive_minimal") {
     return (
       <div className="h-72 bg-[#f4f4f1] text-ink p-5">
-        <p className="text-xs tracking-[0.18em] uppercase font-black">Executive summary</p>
+        <p className="text-xs tracking-[0.18em] uppercase font-black">Clear overview</p>
         <h3 className="text-4xl font-black mt-10 leading-none">{vehicleTitle}</h3>
         <div className="h-1 w-14 bg-black mt-5" />
         <p className="text-sm mt-8 text-black/45">Prepared overview</p>
@@ -101,7 +101,7 @@ function MiniPreview({ styleId, dealerName, vehicleTitle }) {
   if (styleId === "luxury_dark") {
     return (
       <div className="h-72 bg-[#070707] text-[#f5eddf] p-5">
-        <p className="text-xs tracking-[0.22em] text-[#f5eddf]/45">PRIVATE PAGE</p>
+        <p className="text-xs tracking-[0.22em] text-[#f5eddf]/45">PREPARED FOR YOU</p>
         <h3 className="text-3xl font-black mt-12 leading-none">{vehicleTitle}</h3>
         <div className="h-24 rounded-3xl bg-white/10 mt-6" />
       </div>
