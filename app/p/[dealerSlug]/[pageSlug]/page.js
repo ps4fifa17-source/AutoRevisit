@@ -4,6 +4,9 @@ import { getPlan } from "@/lib/plans";
 import { fallbackSalesCopy, cleanVehicleFacts, vehicleTitleFromFacts } from "@/lib/aiPageBrain";
 import { resolvePublicMode } from "@/lib/pageMode";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function customerFirst(page) {
   const raw = page?.customers?.first_name || page?.customer_name || "";
   return raw.trim().split(" ")[0] || "there";
@@ -59,16 +62,40 @@ export default async function PublicCustomerPage({ params }) {
 
   if (!dealer) return <main className="min-h-screen p-6">Dealer not found</main>;
 
-  const { data: page } = await supabase
+  let { data: page } = await supabase
     .from("customer_pages")
     .select("*, customers(*)")
     .eq("slug", params.pageSlug)
     .eq("dealership_id", dealer.id)
-    .eq("status", "live")
+    .in("status", ["live", "active", "published"])
     .is("deleted_at", null)
-    .single();
+    .maybeSingle();
 
-  if (!page) return <main className="min-h-screen p-6">Page not found</main>;
+  // Fallback for older rows where status was saved differently or left blank.
+  // RLS still controls what can be read publicly.
+  if (!page) {
+    const fallback = await supabase
+      .from("customer_pages")
+      .select("*, customers(*)")
+      .eq("slug", params.pageSlug)
+      .eq("dealership_id", dealer.id)
+      .is("deleted_at", null)
+      .maybeSingle();
+
+    page = fallback.data;
+  }
+
+  if (!page) {
+    return (
+      <main className="min-h-screen p-6 flex items-center justify-center bg-[#fffdf8] text-[#111315]">
+        <div className="max-w-md rounded-[32px] border border-black/10 bg-white/80 p-7 shadow-xl">
+          <p className="text-sm font-black uppercase tracking-[0.16em] text-black/35">AutoRevisit</p>
+          <h1 className="text-3xl font-black mt-3">Page not found</h1>
+          <p className="text-black/55 mt-2">This customer page may have been deleted, paused or the link may be incorrect.</p>
+        </div>
+      </main>
+    );
+  }
 
   const { data: pageVehicles } = await supabase
     .from("customer_page_vehicles")
@@ -82,10 +109,10 @@ export default async function PublicCustomerPage({ params }) {
   const plan = getPlan(dealer.plan_name || "starter");
   const planKey = String(dealer.plan_name || dealer.plan || "").toLowerCase();
 
-const showWatermark =
-  planKey !== "premium" &&
-  planKey !== "enterprise" &&
-  !dealer.remove_branding;
+  const showWatermark =
+    planKey !== "premium" &&
+    planKey !== "enterprise" &&
+    !dealer.remove_branding;
 
   const publicUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/p/${params.dealerSlug}/${params.pageSlug}`;
   const vehicleFacts = cleanVehicleFacts(vehicle);

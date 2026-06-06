@@ -74,7 +74,7 @@ export default function DashboardNav() {
   let lastGroup = "";
 
   return (
-    <aside className="card p-3 md:p-4 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+    <aside className="sticky top-0 z-40 -mx-4 mb-4 rounded-none border-x-0 border-t-0 bg-[#fffdf8]/92 p-2 shadow-sm backdrop-blur-xl md:card md:mx-0 md:mb-0 md:p-4 md:top-0 md:h-screen md:overflow-y-auto">
       <div className="hidden md:flex items-center gap-3 px-3 py-3 mb-3">
         <div className="h-11 w-11 rounded-2xl bg-ink text-acid flex items-center justify-center">
           <Sparkles size={20} />
@@ -85,7 +85,7 @@ export default function DashboardNav() {
         </div>
       </div>
 
-      <div className="flex md:block gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+      <div className="flex md:block gap-2 overflow-x-auto overscroll-x-contain md:overflow-visible pb-1 md:pb-0 [-ms-overflow-style:none] [scrollbar-width:none]">
         {items.map((item) => {
           const Icon = item.icon;
           const active = isActive(pathname, item);
@@ -102,13 +102,13 @@ export default function DashboardNav() {
 
               <Link
                 href={item.href}
-                className={`relative flex items-center gap-3 rounded-2xl transition whitespace-nowrap font-black px-4 py-3 ${
+                className={`relative flex shrink-0 items-center justify-center md:justify-start gap-2 md:gap-3 rounded-2xl transition whitespace-nowrap font-black px-3 py-2.5 md:px-4 md:py-3 text-xs md:text-base ${
                   active ? "bg-ink text-acid shadow-lg" : "hover:bg-ink/6 text-ink"
                 }`}
               >
-                {active && <span className="absolute left-1 top-1/2 -translate-y-1/2 h-7 w-1 rounded-full bg-acid" />}
+                {active && <span className="absolute bottom-0 left-1/2 h-1 w-7 -translate-x-1/2 rounded-full bg-acid md:bottom-auto md:left-1 md:top-1/2 md:h-7 md:w-1 md:-translate-x-0 md:-translate-y-1/2" />}
                 <Icon size={17} />
-                <span>{item.label}</span>
+                <span className="hidden sm:inline md:inline">{item.label}</span>
               </Link>
             </div>
           );

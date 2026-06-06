@@ -39,7 +39,7 @@ export default async function DashboardPage() {
 
   const [{ count: vehicleCount }, { count: pageCount }, { data: recentPages }, { data: customers }] = await Promise.all([
     supabase.from("vehicles").select("*", { count: "exact", head: true }).eq("dealership_id", dealer.id),
-    supabase.from("customer_pages").select("*", { count: "exact", head: true }).eq("dealership_id", dealer.id).is("archived_at", null),
+    supabase.from("customer_pages").select("*", { count: "exact", head: true }).eq("dealership_id", dealer.id).eq("status", "live").is("deleted_at", null),
     supabase
       .from("customer_pages")
       .select("id, slug, title, created_at, page_goal, customers(first_name), customer_page_vehicles(vehicles(make,model,year,image_urls))")
@@ -74,14 +74,14 @@ export default async function DashboardPage() {
         <DashboardNav />
 
         <section className="space-y-5">
-          <div className="dark-card p-8 md:p-10 overflow-hidden relative">
+          <div className="dark-card p-6 md:p-10 overflow-hidden relative">
             <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-acid/20 blur-3xl" />
             <div className="relative">
               <p className="text-acid font-black mb-4">{BRAND.name}</p>
-              <h1 className="text-5xl md:text-7xl font-black leading-[0.9] tracking-tight">
+              <h1 className="text-4xl md:text-7xl font-black leading-[0.92] tracking-tight">
                 Your journey command centre.
               </h1>
-              <p className="text-white/60 text-lg mt-6 max-w-2xl">
+              <p className="text-white/60 text-base md:text-lg mt-5 md:mt-6 max-w-2xl">
                 Add stock, create personalised pages, follow buyer activity and keep customers coming back to the car.
               </p>
               <div className="flex flex-wrap gap-3 mt-8">
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <Metric icon={Car} label="Vehicles" value={vehicleCount || 0} href="/dashboard/vehicles" />
             <Metric icon={FileStack} label="Live pages" value={pageCount || 0} href="/dashboard/live-pages" />
             <Metric icon={Flame} label="Hot leads" value={hotCount} href="/dashboard/leads" />
@@ -166,14 +166,14 @@ export default async function DashboardPage() {
   );
 }
 
-function Metric({ title, value, icon: Icon, href }) {
+function Metric({ label, value, icon: Icon, href }) {
   return (
-    <Link href={href} className="card p-6 hover:-translate-y-1 transition group">
-      <div className="h-11 w-11 rounded-2xl bg-ink/5 flex items-center justify-center group-hover:bg-ink group-hover:text-acid transition">
+    <Link href={href} className="card p-4 md:p-6 hover:-translate-y-1 transition group min-h-[132px] md:min-h-0">
+      <div className="h-10 w-10 md:h-11 md:w-11 rounded-2xl bg-ink/5 flex items-center justify-center group-hover:bg-ink group-hover:text-acid transition">
         <Icon size={20} />
       </div>
-      <p className="text-4xl font-black mt-5">{value}</p>
-      <p className="text-ink/50 font-bold mt-1">{title}</p>
+      <p className="text-3xl md:text-4xl font-black mt-4 md:mt-5">{value}</p>
+      <p className="text-ink/50 font-bold mt-1 text-sm md:text-base">{label}</p>
     </Link>
   );
 }
