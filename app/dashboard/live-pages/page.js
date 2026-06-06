@@ -4,6 +4,7 @@ import CopyLinkButton from "@/components/CopyLinkButton";
 import { getDealerContext } from "@/lib/getDealer";
 import { redirect } from "next/navigation";
 import { Plus, Eye, MessageCircle, Repeat2, Pencil, Trash2, CopyPlus } from "lucide-react";
+import { buildPublicPageUrl, getServerSiteUrl } from "@/lib/publicUrl";
 import { isActionEvent } from "@/lib/pageEvents";
 
 function carTitle(vehicle) {
@@ -69,7 +70,7 @@ export default async function LivePagesPage({ searchParams }) {
     eventsByPage[event.customer_page_id].push(event);
   });
 
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const site = getServerSiteUrl();
 
   return (
     <main className="min-h-screen p-4 md:p-6">
@@ -111,7 +112,7 @@ export default async function LivePagesPage({ searchParams }) {
           <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-5">
             {(pages || []).map((page) => {
               const firstVehicle = page.customer_page_vehicles?.[0]?.vehicles;
-              const link = `${site}/p/${dealer.slug}/${page.slug}`;
+              const link = buildPublicPageUrl({ dealerSlug: dealer.slug, pageSlug: page.slug, baseUrl: site });
               const pageEvents = eventsByPage[page.id] || [];
               const views = pageEvents.filter((event) => event.event_type === "view").length;
               const actions = pageEvents.filter((event) => isActionEvent(event.event_type)).length;

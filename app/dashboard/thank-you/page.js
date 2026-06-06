@@ -5,6 +5,7 @@ import DashboardNav from "@/components/DashboardNav";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import { createClient } from "@/lib/supabase/client";
 import { slugify } from "@/lib/slug";
+import { buildThankYouPageUrl, getBrowserSiteUrl } from "@/lib/publicUrl";
 import { HeartHandshake, ArrowRight } from "lucide-react";
 
 export default function ThankYouBuilderPage() {

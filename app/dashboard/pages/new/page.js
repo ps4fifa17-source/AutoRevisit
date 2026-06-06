@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { slugify } from "@/lib/slug";
+import { buildPublicPageUrl, buildThankYouPageUrl, getBrowserSiteUrl } from "@/lib/publicUrl";
 import DashboardNav from "@/components/DashboardNav";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import PageStylePreview from "@/components/PageStylePreview";
@@ -245,8 +246,7 @@ export default function NewCustomerPage() {
       return alert(error.message);
     }
 
-    const site = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-    const publicLink = `${site}/t/${dealer.slug}/${page.slug}`;
+    const publicLink = buildThankYouPageUrl({ dealerSlug: dealer.slug, pageSlug: page.slug, baseUrl: getBrowserSiteUrl() });
     const msg = `Hi ${form.customer_name},\n\nThank you again for choosing us. I’ve put together a quick page with your handover message and review link:\n\n${publicLink}`;
 
     setCreatedLink(publicLink);
@@ -269,9 +269,8 @@ export default function NewCustomerPage() {
 
     setLoading(true);
 
-    const site = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
     const baseSlug = `${slugify(form.customer_name)}-${Date.now().toString().slice(-5)}`;
-    const publicLink = `${site}/p/${dealer.slug}/${baseSlug}`;
+    const publicLink = buildPublicPageUrl({ dealerSlug: dealer.slug, pageSlug: baseSlug, baseUrl: getBrowserSiteUrl() });
 
     const aiRes = await fetch("/api/ai/page-copy", {
       method: "POST",
