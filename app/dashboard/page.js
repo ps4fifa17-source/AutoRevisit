@@ -68,7 +68,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="min-h-screen p-4 md:p-6">
-      <WorkspaceTour plan={planName} />
+      <WorkspaceTour plan={planName} userId={dealer.id} />
 
       <div className="max-w-7xl mx-auto grid md:grid-cols-[250px_1fr] gap-5">
         <DashboardNav />
