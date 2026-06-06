@@ -8,7 +8,7 @@ export default function Home() {
         <div className="dark-card p-7 md:p-12 flex flex-col justify-between min-h-[620px]">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/8 border border-white/10 px-4 py-2 text-acid font-black">
-              <Sparkles size={16} /> Signal
+              <Sparkles size={16} /> AutoRevisit
             </div>
 
             <h1 className="text-6xl md:text-8xl font-black leading-[0.9] mt-10 tracking-tight">
