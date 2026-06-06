@@ -11,13 +11,14 @@ import {
   FileStack,
   BarChart3,
   Settings,
-  Sparkles,
   Plus,
   Send,
   Users,
   Crown,
   ShieldCheck,
 } from "lucide-react";
+
+const LOGO_SRC = "/logo.png";
 
 const baseItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, exact: true, group: "Home" },
@@ -35,11 +36,8 @@ const adminItem = { href: "/dashboard/admin", label: "Admin", icon: ShieldCheck,
 
 function isActive(pathname, item) {
   if (!pathname) return false;
-
-  // Prevent /dashboard/vehicles and /dashboard/vehicles/new both highlighting.
   if (item.href === "/dashboard/vehicles") return pathname === "/dashboard/vehicles";
   if (item.href === "/dashboard/vehicles/new") return pathname === "/dashboard/vehicles/new";
-
   return item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);
 }
 
@@ -52,6 +50,7 @@ export default function DashboardNav() {
   useEffect(() => {
     async function run() {
       const { data: auth } = await supabase.auth.getUser();
+
       if (!auth.user) {
         setLoaded(true);
         return;
@@ -76,9 +75,14 @@ export default function DashboardNav() {
   return (
     <aside className="sticky top-0 z-40 -mx-4 mb-4 rounded-none border-x-0 border-t-0 bg-[#fffdf8]/92 p-2 shadow-sm backdrop-blur-xl md:card md:mx-0 md:mb-0 md:p-4 md:top-0 md:h-screen md:overflow-y-auto">
       <div className="hidden md:flex items-center gap-3 px-3 py-3 mb-3">
-        <div className="h-11 w-11 rounded-2xl bg-ink text-acid flex items-center justify-center">
-          <Sparkles size={20} />
+        <div className="h-12 w-12 flex items-center justify-center shrink-0">
+          <img
+            src={LOGO_SRC}
+            alt={`${BRAND.name} logo`}
+            className="h-11 w-11 object-contain"
+          />
         </div>
+
         <div>
           <p className="font-black leading-none">{BRAND.name}</p>
           <p className="text-xs text-ink/45 mt-1">Journey workspace</p>
@@ -106,7 +110,9 @@ export default function DashboardNav() {
                   active ? "bg-ink text-acid shadow-lg" : "hover:bg-ink/6 text-ink"
                 }`}
               >
-                {active && <span className="absolute bottom-0 left-1/2 h-1 w-7 -translate-x-1/2 rounded-full bg-acid md:bottom-auto md:left-1 md:top-1/2 md:h-7 md:w-1 md:-translate-x-0 md:-translate-y-1/2" />}
+                {active && (
+                  <span className="absolute bottom-0 left-1/2 h-1 w-7 -translate-x-1/2 rounded-full bg-acid md:bottom-auto md:left-1 md:top-1/2 md:h-7 md:w-1 md:-translate-x-0 md:-translate-y-1/2" />
+                )}
                 <Icon size={17} />
                 <span className="hidden sm:inline md:inline">{item.label}</span>
               </Link>
