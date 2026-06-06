@@ -12,6 +12,8 @@ export async function POST(request, { params }) {
 
   const form = await request.formData();
   const approvalStatus = form.get("approval_status") || "approved";
+  const feedType = form.get("stock_feed_type") || "manual";
+  const feedUrl = String(form.get("stock_feed_url") || "").trim();
 
   const { error } = await supabase
     .from("dealerships")
@@ -20,6 +22,8 @@ export async function POST(request, { params }) {
       subscription_status: form.get("subscription_status"),
       approval_status: approvalStatus,
       admin_notes: form.get("admin_notes"),
+      stock_feed_type: feedType,
+      stock_feed_url: feedUrl || null,
       approved_at: approvalStatus === "approved" ? new Date().toISOString() : null,
       approved_by: approvalStatus === "approved" ? user.id : null,
       updated_at: new Date().toISOString(),
@@ -28,7 +32,8 @@ export async function POST(request, { params }) {
 
   if (error) {
     console.error("Admin dealer update failed:", error);
+    return NextResponse.redirect(new URL(`/dashboard/admin/dealers?error=${encodeURIComponent(error.message)}`, request.url));
   }
 
-  return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+  return NextResponse.redirect(new URL("/dashboard/admin/dealers?saved=1", request.url));
 }
