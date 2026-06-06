@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Car, Send } from "lucide-react";
+import { ArrowRight, Car, Send } from "lucide-react";
 
 export default function Home() {
   return (
@@ -7,14 +7,14 @@ export default function Home() {
       <section className="max-w-6xl w-full grid lg:grid-cols-[1.1fr_0.9fr] gap-6 items-stretch">
         <div className="dark-card p-7 md:p-12 flex flex-col justify-between min-h-[620px]">
           <div>
-            <div className="flex items-center gap-2">
-  <img
-    src="/logo.png"
-    alt="AutoRevisit"
-    className="h-4 w-4 object-contain"
-  />
-  <span>{BRAND.name}</span>
-</div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+              <img
+                src="/logo.png"
+                alt="AutoRevisit"
+                className="h-4 w-4 object-contain"
+              />
+              <span className="font-black text-acid">AutoRevisit</span>
+            </div>
 
             <h1 className="text-6xl md:text-8xl font-black leading-[0.9] mt-10 tracking-tight">
               Make every customer feel remembered.
