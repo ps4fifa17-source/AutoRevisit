@@ -11,7 +11,7 @@ export default function Home() {
               <img
                 src="/logo.png"
                 alt="AutoRevisit"
-                className="h-4 w-4 object-contain"
+                className="h-9 w-9 object-contain"
               />
               <span className="font-black text-acid">AutoRevisit</span>
             </div>
