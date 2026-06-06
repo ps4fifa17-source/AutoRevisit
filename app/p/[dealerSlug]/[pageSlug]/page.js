@@ -92,9 +92,9 @@ const showWatermark =
   const vehicleFacts = cleanVehicleFacts(vehicle);
   const dealerPhone = (dealer.whatsapp || dealer.phone || "").replace(/[^0-9]/g, "");
 
-  const fallbackMsg = `Hi, thanks for taking another look at the ${vehicleTitleFromFacts(vehicleFacts)}. Here is the page again: ${publicUrl}`;
+    const customerMessage = `Hi, I've viewed the page for the ${vehicleTitleFromFacts(vehicleFacts)} and I'm interested. Could you help me with the next step?\n\n${publicUrl}`;
   const whatsappUrl = dealerPhone
-    ? `https://wa.me/${dealerPhone}?text=${encodeURIComponent(page.whatsapp_message || fallbackMsg)}`
+    ? `https://wa.me/${dealerPhone}?text=${encodeURIComponent(customerMessage)}`
     : "#";
 
   return (
