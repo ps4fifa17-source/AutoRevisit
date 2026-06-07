@@ -8,7 +8,12 @@ export const viewport = {
 
 export const metadata = {
   title: "AutoRevisit",
-  description: "Personalised vehicle follow-up pages for dealerships.",
+  description: "Personalised vehicle pages for dealerships.",
+  icons: {
+    icon: "/icon.png?v=2",
+    shortcut: "/icon.png?v=2",
+    apple: "/icon.png?v=2",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -18,3 +23,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
